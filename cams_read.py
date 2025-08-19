@@ -111,13 +111,22 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
         #cds_url = lines[0].split(": ")[1].strip()
         #cds_key = lines[1].split(": ")[1].strip()
 
-        client = cdsapi.Client(
-            url=os.environ.get("CDSAPI_URL"),
-            key=os.environ.get("CDSAPI_KEY"),
-            quiet=False
-        )
+        cdsapi_rc_path = os.path.expanduser("~/.cdsapirc")
+        
+        if not os.path.exists(cdsapi_rc_path):
+            cds_url = os.environ.get("CDSAPI_URL")
+            cds_key = os.environ.get("CDSAPI_KEY")
+            
+            if cds_url and cds_key:
+                with open(cdsapi_rc_path, "w") as f:
+                    f.write(f"url: {cds_url}\n")
+                    f.write(f"key: {cds_key}\n")
+                print(f"Plik {cdsapi_rc_path} utworzony pomyślnie.")
+            else:
+                raise ValueError("Brakuje zmiennych środowiskowych CDSAPI_URL lub CDSAPI_KEY")
+        
         print(f"ℹ️  Klient CAMS zainicjalizowany z URL: {cds_url}")
-
+        client = cdsapi.Client()
         with tempfile.TemporaryDirectory() as tmpdir:
             zip_path = f"{tmpdir}/cams_data.zip"
             print(f"🔄 Pobieranie danych CAMS do tymczasowego pliku {zip_path}...")
