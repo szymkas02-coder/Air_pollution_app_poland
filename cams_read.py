@@ -113,16 +113,35 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
         print(f"ℹ️  Klient CAMS zainicjalizowany z URL: {cds_url}")
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            zip_path = f"{tmpdir}/cams_data.zip"
+            zip_path = os.path.join(tmpdir, "cams_data.zip")
             print(f"🔄 Pobieranie danych CAMS do tymczasowego pliku {zip_path}...")
-            client.retrieve(dataset, request).download(zip_path)
-
-            # Rozpakowanie NetCDF z ZIP w pamięci
-            with ZipFile(zip_path) as zf:
-                nc_name = zf.namelist()[0]
-                with zf.open(nc_name) as nc_file:
-                    ds = xr.open_dataset(nc_file)
-
+    
+            # Pobranie danych do pliku ZIP
+            try:
+                client.retrieve(dataset, request).download(zip_path)
+            except Exception as e:
+                raise RuntimeError(f"❌ Błąd pobierania danych z CDS: {e}")
+    
+            # Sprawdzenie czy plik został pobrany
+            if not os.path.exists(zip_path):
+                raise FileNotFoundError(f"❌ Plik ZIP nie został pobrany: {zip_path}")
+    
+            # Rozpakowanie NetCDF z ZIP
+            try:
+                with ZipFile(zip_path) as zf:
+                    namelist = zf.namelist()
+                    if len(namelist) == 0:
+                        raise ValueError("❌ ZIP jest pusty, brak plików do otwarcia.")
+                    nc_name = namelist[0]
+                    print(f"📦 Otwieranie pliku NetCDF w ZIP: {nc_name}")
+                    with zf.open(nc_name) as nc_file:
+                        try:
+                            ds = xr.open_dataset(nc_file)
+                        except Exception as e:
+                            raise RuntimeError(f"❌ Błąd wczytywania NetCDF do xarray: {e}")
+            except BadZipFile as e:
+                raise RuntimeError(f"❌ Nie udało się otworzyć ZIP: {e}")
+    
             print("✅ Dane wczytane do xarray w pamięci")
 
 
