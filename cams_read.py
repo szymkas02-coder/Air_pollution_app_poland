@@ -113,6 +113,34 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
         
         print(f"ℹ️  Klient CAMS zainicjalizowany z URL: {cds_url}")
 
+        zip_path = "/tmp/cams_data.zip"
+        st.info(f"🔄 Pobieranie danych CAMS do {zip_path}...")
+        
+        try:
+            client.retrieve(dataset, request).download(zip_path)
+        except Exception as e:
+            st.error(f"❌ Błąd pobierania danych: {e}")
+            return None
+        
+        # Sprawdzenie czy plik istnieje i jego rozmiaru
+        if not os.path.exists(zip_path):
+            st.error("❌ Plik ZIP nie został pobrany")
+            return None
+        
+        st.info(f"✅ Plik pobrany, rozmiar: {os.path.getsize(zip_path)} bajtów")
+        
+        # Rozpakowanie ZIP
+        try:
+            with ZipFile(zip_path) as zf:
+                nc_name = zf.namelist()[0]
+                with zf.open(nc_name) as nc_file:
+                    ds = xr.open_dataset(nc_file)
+        except Exception as e:
+            st.error(f"❌ Błąd wczytywania ZIP/NetCDF: {e}")
+            return None
+        
+        st.info("✅ Dane wczytane do xarray w pamięci")
+        '''
         with tempfile.TemporaryDirectory() as tmpdir:
             zip_path = os.path.join(tmpdir, "cams_data.zip")
             print(f"🔄 Pobieranie danych CAMS do tymczasowego pliku {zip_path}...")
@@ -146,6 +174,7 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
                 raise RuntimeError(f"❌ Nie udało się otworzyć ZIP: {e}")
     
             print("✅ Dane wczytane do xarray w pamięci")
+            '''
 
 
             # Selekcja poziomu 0 i squeeze
