@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import tempfile
 from zipfile import ZipFile
+import streamlit as st
 
 def add_absolute_time(ds):
     """Dodaje współrzędną absolute_time na podstawie atrybutu FORECAST.
