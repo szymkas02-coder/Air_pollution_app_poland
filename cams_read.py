@@ -105,8 +105,8 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
     }
 
     try:
-        cds_url = os.environ.get("CDSAPI_URL")
-        cds_key = os.environ.get("CDSAPI_KEY")
+        cds_url = os.environ.get("url")
+        cds_key = os.environ.get("key")
         
         if not cds_url or not cds_key:
             raise ValueError(
