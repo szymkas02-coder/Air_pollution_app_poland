@@ -109,6 +109,7 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
         cds_key = os.environ.get("CDSAPI_KEY")
 
         client = cdsapi.Client(url=cds_url, key=cds_key, timeout=300, verify=True)
+        print("zmiana jest kurde")
         
         print(f"ℹ️  Klient CAMS zainicjalizowany z URL: {cds_url}")
 
