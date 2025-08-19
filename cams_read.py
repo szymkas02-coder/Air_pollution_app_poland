@@ -119,6 +119,8 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
             # Pobranie danych do pliku ZIP
             try:
                 client.retrieve(dataset, request).download(zip_path)
+                print(zip_path.exists())
+                print(zip_path.stat().st_size)
             except Exception as e:
                 raise RuntimeError(f"❌ Błąd pobierania danych z CDS: {e}")
     
