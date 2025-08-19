@@ -11,40 +11,6 @@ import numpy as np
 import tempfile
 from zipfile import ZipFile
 
-
-def extract_netcdf_from_zip(zip_path, output_folder):
-    """
-    Extract NetCDF file from a zip archive and save it with date-based naming.
-    Returns the path to the extracted NetCDF file.
-    """
-    try:
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            # List contents to find NetCDF files
-            nc_files = [f for f in zip_ref.namelist() if f.endswith('.nc')]
-            
-            if not nc_files:
-                print(f"❌ No NetCDF files found in zip: {zip_path}")
-                return None
-            
-            print(f"📦 Found NetCDF files in zip: {nc_files}")
-            
-            # Extract the first NetCDF file found
-            nc_file_in_zip = nc_files[0]
-            output_nc = os.path.join(output_folder, f"CAMS_air_qual.nc")
-            
-            # Extract directly to output location
-            print(f"🔄 Extracting {nc_file_in_zip} to {output_nc}...")
-            # Extract the NetCDF file and write it directly to the desired output path
-            with zip_ref.open(nc_file_in_zip) as source:
-                with open(output_nc, 'wb') as target:
-                    shutil.copyfileobj(source, target)
-            print(f"✅ Extracted NetCDF from zip: {output_nc}")
-            return output_nc
-                    
-    except Exception as e:
-        print(f"❌ Error extracting from zip {zip_path}: {e}")
-        return None
-
 def add_absolute_time(ds):
     """Dodaje współrzędną absolute_time na podstawie atrybutu FORECAST.
     Zmienia wartości współrzędnej 'time' na absolutny czas, nie zmieniając jej nazwy."""
