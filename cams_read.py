@@ -178,6 +178,7 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
     
             # Tu możesz wywołać add_absolute_time(ds) jeśli potrzebujesz
             ds = add_absolute_time(ds)
+            print(ds)
     
             print("✅ Dane pobrane i przetworzone w pamięci.")
             return ds
