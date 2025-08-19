@@ -177,41 +177,41 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
             '''
 
 
-            # Selekcja poziomu 0 i squeeze
-            ds = ds.sel(level=0).squeeze()
-    
-            # Zmiana nazw zmiennych
-            var_rename = {
-                "apg_conc": "alder_pollen",
-                "nh3_conc": "ammonia",
-                "bpg_conc": "birch_pollen",
-                "co_conc": "carbon_monoxide",
-                "gpg_conc": "grass_pollen",
-                "mpg_conc": "mugwort_pollen",
-                "no2_conc": "nitrogen_dioxide",
-                "no_conc": "nitrogen_monoxide",
-                "opg_conc": "olive_pollen",
-                "o3_conc": "ozone",
-                "pm2p5_conc": "particulate_matter_2.5um",
-                "pm10_conc": "particulate_matter_10um",
-                "rwpg_conc": "ragweed_pollen",
-                "so2_conc": "sulphur_dioxide"
-            }
-            ds = ds.rename(var_rename)
-    
-            # Poprawka współrzędnych
-            if 'latitude' in ds.coords and 'longitude' in ds.coords:
-                lats = np.round(ds.latitude.values, 3)
-                lons = np.round(ds.longitude.values, 3)
-                lons_corrected = np.where(lons > 180, lons - 360, lons)
-                ds = ds.assign_coords(latitude=lats, longitude=lons_corrected)
-    
-            # Tu możesz wywołać add_absolute_time(ds) jeśli potrzebujesz
-            ds = add_absolute_time(ds)
-            print(ds)
-    
-            print("✅ Dane pobrane i przetworzone w pamięci.")
-            return ds
+        # Selekcja poziomu 0 i squeeze
+        ds = ds.sel(level=0).squeeze()
+
+        # Zmiana nazw zmiennych
+        var_rename = {
+            "apg_conc": "alder_pollen",
+            "nh3_conc": "ammonia",
+            "bpg_conc": "birch_pollen",
+            "co_conc": "carbon_monoxide",
+            "gpg_conc": "grass_pollen",
+            "mpg_conc": "mugwort_pollen",
+            "no2_conc": "nitrogen_dioxide",
+            "no_conc": "nitrogen_monoxide",
+            "opg_conc": "olive_pollen",
+            "o3_conc": "ozone",
+            "pm2p5_conc": "particulate_matter_2.5um",
+            "pm10_conc": "particulate_matter_10um",
+            "rwpg_conc": "ragweed_pollen",
+            "so2_conc": "sulphur_dioxide"
+        }
+        ds = ds.rename(var_rename)
+
+        # Poprawka współrzędnych
+        if 'latitude' in ds.coords and 'longitude' in ds.coords:
+            lats = np.round(ds.latitude.values, 3)
+            lons = np.round(ds.longitude.values, 3)
+            lons_corrected = np.where(lons > 180, lons - 360, lons)
+            ds = ds.assign_coords(latitude=lats, longitude=lons_corrected)
+
+        # Tu możesz wywołać add_absolute_time(ds) jeśli potrzebujesz
+        ds = add_absolute_time(ds)
+        print(ds)
+
+        print("✅ Dane pobrane i przetworzone w pamięci.")
+        return ds
 
     except Exception as e:
         import traceback
