@@ -105,8 +105,10 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
     }
 
     try:
-        cds_url = os.environ["CDSAPI_URL"]
-        cds_key = os.environ["CDSAPI_KEY"]
+        with open(".cdsapirc") as f:
+            lines = f.readlines()
+        cds_url = lines[0].split(": ")[1].strip()
+        cds_key = lines[1].split(": ")[1].strip()
 
         client = cdsapi.Client(url=cds_url, key=cds_key)
         
@@ -184,4 +186,3 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
         import traceback
         print(f"❌ Błąd pobierania lub przetwarzania danych CAMS:\n{traceback.format_exc()}")
         return None
-
