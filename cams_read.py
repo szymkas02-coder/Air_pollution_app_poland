@@ -105,25 +105,19 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
     }
 
     try:
-        # Odczytaj url i key z pliku .cdsapirc w bieżącym katalogu
-        #with open(".cdsapirc") as f:
-        #    lines = f.readlines()
-        #cds_url = lines[0].split(": ")[1].strip()
-        #cds_key = lines[1].split(": ")[1].strip()
-
-        cdsapi_rc_path = os.path.expanduser("~/.cdsapirc")
+        cds_url = os.environ.get("CDSAPI_URL")
+        cds_key = os.environ.get("CDSAPI_KEY")
         
-        if not os.path.exists(cdsapi_rc_path):
-            cds_url = os.environ.get("CDSAPI_URL")
-            cds_key = os.environ.get("CDSAPI_KEY")
-            
-            if cds_url and cds_key:
-                with open(cdsapi_rc_path, "w") as f:
-                    f.write(f"url: {cds_url}\n")
-                    f.write(f"key: {cds_key}\n")
-                print(f"Plik {cdsapi_rc_path} utworzony pomyślnie.")
-            else:
-                raise ValueError("Brakuje zmiennych środowiskowych CDSAPI_URL lub CDSAPI_KEY")
+        if not cds_url or not cds_key:
+            raise ValueError(
+                "Musisz ustawić zmienne środowiskowe CDSAPI_URL i CDSAPI_KEY w środowisku"
+            )
+        
+        # Tworzymy klienta CDS z kluczem i URL bezpośrednio
+        client = cdsapi.Client(
+            url=cds_url,
+            key=cds_key
+        )
         
         print(f"ℹ️  Klient CAMS zainicjalizowany z URL: {cds_url}")
         client = cdsapi.Client()
