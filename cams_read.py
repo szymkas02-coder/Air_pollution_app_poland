@@ -105,10 +105,8 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
     }
 
     try:
-        with open(".cdsapirc") as f:
-            lines = f.readlines()
-        cds_url = lines[0].split(": ")[1].strip()
-        cds_key = lines[1].split(": ")[1].strip()
+        cds_url = os.environ.get("CDSAPI_URL")
+        cds_key = os.environ.get("CDSAPI_KEY")
 
         client = cdsapi.Client(url=cds_url, key=cds_key)
         
