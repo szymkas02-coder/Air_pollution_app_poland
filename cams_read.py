@@ -70,7 +70,7 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
         "data_format": "netcdf_zip",
         "area": [56, 7, 47, 26]
     }
-    st.info(f"Start trying ...")
+    #st.info(f"Start trying ...")
     try:
         cds_url = os.environ.get("CDSAPI_URL")
         cds_key = os.environ.get("CDSAPI_KEY")
