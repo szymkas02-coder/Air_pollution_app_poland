@@ -76,7 +76,7 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
         cds_key = os.environ.get("CDSAPI_KEY")
 
         client = cdsapi.Client(url=cds_url, key=cds_key)
-        print("zmiana jest kurde")
+        #print("zmiana jest kurde")
         
         print(f"ℹ️  Klient CAMS zainicjalizowany z URL: {cds_url}")
 
@@ -106,7 +106,7 @@ def get_cams_air_quality(today_str=datetime.utcnow().strftime("%Y-%m-%d")):
             st.error(f"❌ Błąd wczytywania ZIP/NetCDF: {e}")
             return None
         
-        st.info("✅ Dane wczytane do xarray w pamięci")
+        #st.info("✅ Dane wczytane do xarray w pamięci")
         '''
         with tempfile.TemporaryDirectory() as tmpdir:
             zip_path = os.path.join(tmpdir, "cams_data.zip")
